@@ -1,0 +1,84 @@
+<!--Create a  HTML Application that uses jQuery to access the REST service and Display the data from the REST service and should be able to add new data to the storage using the REST API.  
+No need for deleting and updating demo. 
+It should display the existing data and should allow users to add new data(10 Marks)-->
+<html>
+    <head>
+        <style>
+            h1,nav{
+                background-color: lightblue;
+                text-align: center;
+                height: 50px;
+                width: 100%;
+            }
+        </style>
+        <script src="./lib/jquery.js"></script>
+        <script>
+            const url= "http://localhost:1234/students"
+            function showAddDiv() {
+                $("div").hide()
+                $("div:last").show()
+            }
+            function addChanges() {
+                let obj={}
+                obj.studentId=$("#newId").val()
+                obj.studentName=$("#newName").val()
+                obj.studentBranch=$("#newBranch").val()
+                obj.studentPhone=$("#newPhone").val()
+                $.post(url, obj, (data)=>{
+                    alert(data)
+                    $("input").val("")
+                    $("div").hide()
+                })
+            }
+            function populateData() {
+                $("div:first").show()
+                $("table").find("tr:gt(0)").remove();
+                $.get(url, (data)=>{
+                    let array = JSON.parse(data);
+                    for (const student of array) {
+                        const row = `<tr>
+                            <td>${student.studentId}</td>
+                            <td>${student.studentName}</td>
+                            <td>${student.studentBranch}</td>
+                            <td>${student.studentPhone}</td>
+                            </tr>`
+                        $("table").append(row);
+                    }      
+                })
+                
+            }        
+            function init(){
+                $("div").hide();
+                $("a:first").click(populateData);
+                $("a:eq(1)").click(showAddDiv);
+                $("button:eq(0)").click(addChanges);
+            }
+            $(document).ready(init);
+        </script>
+    </head>
+    <body>
+        <h1>Student Details</h1>
+        <nav>
+            <a href="#">Show All</a>
+            <a href="#">Add New</a>
+        </nav>
+        <div class="section">
+            <table border="1">
+                <tr>
+                    <th>Student ID</th>
+                    <th>Student Name</th>
+                    <th>Student Branch</th>
+                    <th>Student Phone</th>
+                </tr>
+            </table>
+        </div>
+        <div class="section">
+            <h2>Register New Employee</h2>
+            <p>Student ID: <input id="newId" /></p>
+            <p>Student Name : <input id="newName" /></p>
+            <p>Student Branch : <input id="newBranch" /></p>
+            <p>Student Phone : <input id="newPhone" /></p>
+            <p><button>Add Student</button></p>
+        </div>
+    </body>
+</html>

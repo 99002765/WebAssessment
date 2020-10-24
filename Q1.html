@@ -1,0 +1,68 @@
+<!--Create a HTML Page that allows a person to enter the details in a Web Form.  
+The form should have the controls to enter text, select date, select a value from a dropdown list and a value from a set of radio buttons.
+The content entered by the user should be stored in the local storage of the browser.  
+Let there  be a button outside the form to read the contents of the local Storage and display the data into a div tag. (5 Marks)-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Form</title>
+    <style>
+        body{
+            background-color: lightblue;
+            text-align: center;
+            font-size: 16px;
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
+        }
+    </style>
+    <script>
+        function saveData(){
+            if(document.getElementById("uname").value==""){
+                alert("Please enter username");
+                return;
+            }
+            else if(document.getElementById("dateOfBirth").value==""){
+                alert("Please select Date of Birth");
+                return;
+            }
+            localStorage.setItem('name', document.getElementById("uname").value)
+            localStorage.setItem('dateOfBirth', document.getElementById("dateOfBirth").value)
+            //localStorage.setItem('gender', document.getElementsByName("gender").value)
+            var gender=document.getElementsByName('gender')
+            for(var i=0;i<gender.length;i++){
+                if(gender[i].checked){
+                    localStorage.setItem('gender', gender[i].value)
+                }
+            }
+            localStorage.setItem('department', document.getElementById("department").value)
+            alert("Submit successful")
+        }
+        function showData(){
+            document.getElementById("displayData").innerHTML=`The details available:</br>
+            Name:${localStorage.getItem('name')}</br>
+            Date of Birth:${localStorage.getItem('dateOfBirth')}</br>
+            Gender:${localStorage.getItem('gender')}</br>
+            Department:${localStorage.getItem('department')}</br>`;
+            //alert(localStorage.getItem('name'));
+        }
+    </script>
+</head>
+<body>
+    <form action="#">
+        
+        <p>Enter name : <input type="text" name="uname" id="uname" required></p>
+        <p>Enter Date of Birth : <input type="date" name="dateOfBirth" id="dateOfBirth" required></p>
+        <p>Gender : <input type="radio" name="gender" id="Male" value="Male" checked>Male <input type="radio" name="gender" id="Female" value="Female">Female</p>
+        <p>Department : <select name="department" id="department" required>
+            <option value="CSE">CSE</option>
+            <option value="ECE">ECE</option>
+            <option value="CEE">CEE</option>
+            <option value="MNT">MNT</option>
+        </select></p>
+        <p><input type="button" value="Submit" onclick="saveData()"></p>
+    </form>
+    <input type="button" value="Show Details" onclick="showData()">
+    <div id="displayData"></div>
+</body>
+</html>
